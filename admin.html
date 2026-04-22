@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Maison Verdant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-logo">Maison Verdant</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/book">Reserve</a>
+      <a href="/admin">Admin</a>
+    </div>
+  </nav>
+
+  <div class="admin-wrapper">
+    <div class="admin-header">
+      <h1>Booking Dashboard</h1>
+      <p>{{ bookings|length }} reservation{% if bookings|length != 1 %}s{% endif %} found</p>
+    </div>
+
+    {% if bookings %}
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>#ID</th>
+            <th>Guest</th>
+            <th>Contact</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Guests</th>
+            <th>Table</th>
+            <th>Notes</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bookings %}
+          <tr>
+            <td><span class="badge">#{{ b['id'] }}</span></td>
+            <td><strong>{{ b['name'] }}</strong></td>
+            <td>
+              <div>{{ b['email'] }}</div>
+              <div class="sub-text">{{ b['phone'] }}</div>
+            </td>
+            <td>{{ b['date'] }}</td>
+            <td>{{ b['time'] }}</td>
+            <td>{{ b['guests'] }}</td>
+            <td>Table {{ b['table_no'] }}</td>
+            <td>{{ b['special_request'] or '—' }}</td>
+            <td>
+              <form method="POST" action="/admin/cancel/{{ b['id'] }}" onsubmit="return confirm('Cancel this booking?')">
+                <button type="submit" class="btn-cancel">Cancel</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p>No bookings yet. <a href="/book">Make a reservation →</a></p>
+    </div>
+    {% endif %}
+  </div>
+
+  <footer class="footer">
+    <p>© 2024 Maison Verdant · 14 Rue des Jardins · contact@maisonverdant.com</p>
+  </footer>
+</body>
+</html>
